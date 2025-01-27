@@ -18,7 +18,8 @@ pacman::p_load(
   janitor,     # Cleaning functions
   openxlsx,        #Exports into excel
   scico,       # More color palette options
-  rsconnect   #To move the shiny app to a host
+  rsconnect,   #To move the shiny app to a host
+  shinythemes #Aesthetic options to shiny
 )
 
 
@@ -290,16 +291,19 @@ df_summary <- df_long %>%
 
 
 
-#Visualization------------------------------------------------------------------------------------------------------
+#Shiny UI------------------------------------------------------------------------------------------------------
 
 
 
 # Shiny App
 ui <- fluidPage(
-  # Add padding to the title and center it
+  
+  theme = shinytheme("yeti"),
+  
   div(
+    
     titlePanel("Interactive Monthly Visualizations"),
-    style = "text-align: center; padding-top: 20px;"
+    style = "text-align: center; "
   ),
   sidebarLayout(
     sidebarPanel(
@@ -307,37 +311,51 @@ ui <- fluidPage(
       checkboxGroupInput(
         inputId = "selected_doctors",       # Input ID for dynamic filtering
         label = "Select Doctors to Include:",  # Label for the input
-        choices = unique(doctor_summary$names_dr),  # Populate with all unique doctor names
+        choices = setdiff(unique(doctor_summary$names_dr), "Total"),  # Populate with all unique doctor names
         
         # Remove "Total" from the default selection so it's unchecked
         selected = setdiff(unique(doctor_summary$names_dr), "Total")
-      )
+      ),
+      
+      # Add "Select All" and "Remove All" buttons
+      actionButton("select_all", "Select All"),
+      actionButton("remove_all", "Remove All")
+      
     ),
+    
+    
     mainPanel(
       tabsetPanel(
         tabPanel("Revenue Pie Chart", 
                  div(
                    plotlyOutput("revenuePie"), 
                    textOutput("revenueTotal"),  # Add text output for total revenue
-                   style = "text-align: center;"
+                   style = "text-align: center; padding-top: 30px;"
                  )),
         tabPanel("Cases Pie Chart", 
                  div(
                    plotlyOutput("casesPie"), 
                    textOutput("casesTotal"),  # Add text output for total cases
-                   style = "text-align: center;"
+                   style = "text-align: center;padding-top: 30px;"
               )),
         tabPanel(
           "Case Type Breakdown",
-          div(plotlyOutput("stackedBarChart"), style = "text-align: center;"
+          div(plotlyOutput("stackedBarChart"), 
+          style = "text-align: center;
+              padding-top: 20px;"
               )),
-        tabPanel("Specialty Heatmap", plotlyOutput("heatmapPlot"
+        tabPanel(
+          "Specialty Heatmap", 
+                 
+           div(plotlyOutput("heatmapPlot"),
+           style = "text-align: center;
+                     padding-top; 30px;"
               )),
         tabPanel(
           "Treemap (Doctor Income)",
           div(
             plotlyOutput("treemapPlot"),
-            style = "text-align: center;"
+            style = "text-align: center;padding-top: 20px;"
             ))
         
       )
@@ -345,10 +363,47 @@ ui <- fluidPage(
   )
 )
 
+#Server -------------------------------------
+
+
 server <- function(input, output, session) {
+  
+  
+  
+  
+  # Logic for "Select All" button
+  observeEvent(input$select_all, {
+    updateCheckboxGroupInput(
+      session,
+      inputId = "selected_doctors",
+      choices = setdiff(unique(doctor_summary$names_dr), "Total"),  # Remove "Total"
+      selected = setdiff(unique(doctor_summary$names_dr), "Total")  # Select all except "Total"
+    )
+  })
+  
+  # Logic for "Remove All" button
+  observeEvent(input$remove_all, {
+    updateCheckboxGroupInput(
+      session,
+      inputId = "selected_doctors",
+      choices = setdiff(unique(doctor_summary$names_dr), "Total"),  # Remove "Total"
+      selected = NULL  # Deselect all
+    )
+  })
+ 
+  
+  #Revenue Pie Chart --------------------------
+  
   
   # Render Revenue Pie Chart
   output$revenuePie <- renderPlotly({
+    
+    # Check if the selection is empty
+    if (is.null(input$selected_doctors) || length(input$selected_doctors) == 0) {
+      return(plotly_empty() %>%
+               layout(title = "No doctors selected. Please choose at least one."))
+    }
+    
     # Filter data based on user selection
     filtered_data <- doctor_summary %>%
       filter(
@@ -385,8 +440,16 @@ server <- function(input, output, session) {
       summarize(total = sum(total_revenue, na.rm = TRUE)) %>%
       pull(total)
     
-    paste("Total Revenue: $", format(total_revenue, big.mark = ","))
+
+    
+      paste("Total Revenue: $", format(total_revenue, big.mark = ","))
   })
+  
+  
+  
+  
+  #Cases Pie Chart-------------------
+ 
   
   # Render Cases Pie Chart
   output$casesPie <- renderPlotly({
@@ -397,6 +460,15 @@ server <- function(input, output, session) {
           (is.null(input$selected_doctors) | names_dr %in% input$selected_doctors) &
           total_cases > 0  # Exclude rows with zero cases
       )
+    
+    
+    # Check if the selection is empty
+    if (is.null(input$selected_doctors) || length(input$selected_doctors) == 0) {
+      return(plotly_empty() %>%
+               layout(title = "No doctors selected. Please choose at least one."))
+    }
+    
+    
     
     # Check if the filtered data is empty
     if (nrow(filtered_data) == 0) {
@@ -429,8 +501,23 @@ server <- function(input, output, session) {
     paste("Total Cases: ", format(total_cases, big.mark = ","))
   })
   
+  
+  
+  #Stacked Bar Chart---------------
+  
+  
   # Render Stacked Bar Chart
   output$stackedBarChart <- renderPlotly({
+    
+    
+    
+    # Check if the selection is empty
+    if (is.null(input$selected_doctors) || length(input$selected_doctors) == 0) {
+      return(plotly_empty() %>%
+               layout(title = "No doctors selected. Please choose at least one."))
+    }
+    
+    
     # Prepare data for plotting
     filtered_data <- doctor_summary %>%
       filter(
@@ -481,7 +568,16 @@ server <- function(input, output, session) {
     ggplotly(stacked_bar, tooltip = "text")
   })
   
+  #Heat Map ------------------------------------------
+  
   output$heatmapPlot <- renderPlotly({
+    
+    # Check if the selection is empty
+    if (is.null(input$selected_doctors) || length(input$selected_doctors) == 0) {
+      return(plotly_empty() %>%
+               layout(title = "No doctors selected. Please choose at least one."))
+    }
+    
     # 1) Possibly filter `df_summary` by selected doctors
     filtered_df <- df_summary %>%
       filter(names_dr %in% input$selected_doctors)
@@ -502,7 +598,17 @@ server <- function(input, output, session) {
       )
   })
   
+  
+  #Treemap --------------------------------
+  
   output$treemapPlot <- renderPlotly({
+    
+    
+    # Check if the selection is empty
+    if (is.null(input$selected_doctors) || length(input$selected_doctors) == 0) {
+      return(plotly_empty() %>%
+               layout(title = "No doctors selected. Please choose at least one."))
+    }
     
     # 1) Filter data based on user selection
     filtered_data <- doctor_summary %>%
@@ -546,7 +652,7 @@ server <- function(input, output, session) {
 }
 
 #Ending--------------------------------------------------------------------
-
+#shinyApp(ui, server) # For testing purposes only
 
 
 
