@@ -652,7 +652,7 @@ server <- function(input, output, session) {
 }
 
 #Ending--------------------------------------------------------------------
-#shinyApp(ui, server) # For testing purposes only
+shinyApp(ui, server) # For testing purposes only
 
 
 
