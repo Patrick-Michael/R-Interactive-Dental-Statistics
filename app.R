@@ -19,7 +19,8 @@ pacman::p_load(
   openxlsx,        #Exports into excel
   scico,       # More color palette options
   rsconnect,   #To move the shiny app to a host
-  shinythemes #Aesthetic options to shiny
+  shinythemes, #Aesthetic options to shiny
+  renv         #renv lock and restore
 )
 
 
