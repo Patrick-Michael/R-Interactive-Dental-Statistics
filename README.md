@@ -8,6 +8,5 @@ This is my work and submission for the Digital Health module final.
 
 https://patrickmichael.shinyapps.io/Patrick-Michael-University/     -> This is the URL that leads to my interactive visuals. 
 
-To recreate my project, only the "app.R" script, "stats_doc_202412.xlsm" database, and the "Patrick-Michael-University.Rproj" project files are needed for download.
 
-Everything else is either redundant or extra outputs
+
