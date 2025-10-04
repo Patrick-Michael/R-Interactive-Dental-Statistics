@@ -16,7 +16,7 @@ It enables managers to quickly analyze performance, revenue, and workforce distr
 
 ---
 ## Interactive Dashboard
-
+Hosted on shinyapps.io:
 
 [![Shiny Demo](https://img.shields.io/badge/Live_Demo-Shiny-1f77b4?style=for-the-badge&logo=r)](https://patrickmichael.shinyapps.io/Patrick-Michael-University/)
 
