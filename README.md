@@ -12,7 +12,7 @@ Monthly reports in dental practices often come as bulky, unstructured Excel file
 - Limited utility for decision-making  
 
 This project cleans and transforms these reports into **interactive, user-friendly dashboards** using **R** and **Shiny**.  
-It enables managers to quickly analyze performance, revenue, and workforce distribution — turning raw data into actionable insights.  
+It enables managers to quickly analyze performance, revenue, and workforce distribution, turning raw data into actionable insights.  
 
 ---
 ## Interactive Dashboard
