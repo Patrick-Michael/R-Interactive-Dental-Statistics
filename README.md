@@ -15,7 +15,7 @@ This project cleans and transforms these reports into **interactive, user-friend
 It enables managers to quickly analyze performance, revenue, and workforce distribution — turning raw data into actionable insights.  
 
 ---
-## Demo
+## Interactive Dashboard
 
 
 [![Shiny Demo](https://img.shields.io/badge/Live_Demo-Shiny-1f77b4?style=for-the-badge&logo=r)](https://patrickmichael.shinyapps.io/Patrick-Michael-University/)
