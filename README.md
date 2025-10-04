@@ -1,12 +1,48 @@
-This is my work and submission for the Digital Health module final.
+# Digital Health Insights: Interactive Dental Statistics  
 
-"stats_doc_202412.xlsm" -> This is the raw data file. This is the input for my script.
+**A visualization-driven approach to optimize dental practice management using R and Shiny.**  
+---
 
-"my_project.xlsx" -> This is an output for the first cleaning round. It is redundant.
 
-"doctor_summary.xlsx" -> This is the final output after all the cleaning and data manipulation. It can be used as a visualization aid despite lacking aesthetics.
+## Overview  
 
-https://patrickmichael.shinyapps.io/Patrick-Michael-University/     -> This is the URL that leads to my interactive visuals. 
+Monthly reports in dental practices often come as bulky, unstructured Excel files:  
+- Merged cells, typos, and inconsistent formatting  
+- Difficult to process with computers  
+- Limited utility for decision-making  
 
+This project cleans and transforms these reports into **interactive, user-friendly dashboards** using **R** and **Shiny**.  
+It enables managers to quickly analyze performance, revenue, and workforce distribution — turning raw data into actionable insights.  
+
+---
+## Demo
+
+
+[![Shiny Demo](https://img.shields.io/badge/Live_Demo-Shiny-1f77b4?style=for-the-badge&logo=r)](https://patrickmichael.shinyapps.io/Patrick-Michael-University/)
+
+
+---
+
+## Features  
+
+- **Revenue Chart (Pie)** – visualize total revenue and dentist-specific contributions  
+- **Case Chart** – track paid, free, and referred cases  
+- **Case Type Breakdown** – toggle case types per dentist for deeper analysis  
+- **Speciality Heatmap** – identify dentist strengths and allocate resources effectively  
+- **Income Treemap** – compare dentist payouts at a glance  
+- **Interactive Controls** – “Select All” / “Remove All” buttons for smooth filtering  
+
+---
+
+## Tech Stack  
+
+- **R** (data cleaning, transformation)  
+- **Shiny** (interactive dashboards)  
+- **tidyverse** (data wrangling and visualization)  
+
+---
+
+
+## Showcase
 
 
